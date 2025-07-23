@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ContentSplitterService {
+public class ContentSplitter {
 
     @Autowired
     private ContentNormalizeSpace normalizeSpace;

@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Repository
-public class EmbeddingRepository  {
+public class EmbeddingRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbc;

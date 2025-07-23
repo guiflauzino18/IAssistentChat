@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmbeddingConveterService {
+public class EmbeddingConveter {
 
-    private Logger logger = LoggerFactory.getLogger(EmbeddingConveterService.class);
+    private Logger logger = LoggerFactory.getLogger(EmbeddingConveter.class);
 
     public EmbeddingEntity toEntity(EmbeddingDTO dto){
 

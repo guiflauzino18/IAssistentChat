@@ -11,11 +11,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static reactor.core.publisher.Mono.when;
 
-class ContentSplitterServiceTest {
+class ContentSplitterTest {
 
     private ContentNormalizeSpace normalizeSpace = new ContentNormalizeSpace();
 
-    private final ContentSplitterService splitter = new ContentSplitterService();
+    private final ContentSplitter splitter = new ContentSplitter();
 
     @BeforeEach
     void setUp() {

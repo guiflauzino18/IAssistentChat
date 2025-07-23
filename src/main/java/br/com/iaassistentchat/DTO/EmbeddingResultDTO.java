@@ -1,4 +1,11 @@
 package br.com.iaassistentchat.DTO;
 
-public class EmbeddingResultDTO {
+import java.util.UUID;
+
+public record EmbeddingResultDTO(
+        UUID id,
+        String text,
+        String source
+) {
+
 }

@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class EmbeddingPersitenceService {
+public class EmbeddingPersitence {
 
     @Autowired
     private EmbeddingRepository repository;
     @Autowired
-    private EmbeddingConveterService conveter;
+    private EmbeddingConveter conveter;
 
 
-    private Logger logger = LoggerFactory.getLogger(EmbeddingPersitenceService.class);
+    private Logger logger = LoggerFactory.getLogger(EmbeddingPersitence.class);
 
     public void save(List<EmbeddingDTO> embeddings){
 

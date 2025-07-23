@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class EmbeddingGenerateService {
+public class EmbeddingGenerate {
 
     @Autowired
     private OpenAiEmbeddingModel embeddingModel;
 
-    Logger logger = LoggerFactory.getLogger(EmbeddingGenerateService.class);
+    Logger logger = LoggerFactory.getLogger(EmbeddingGenerate.class);
 
     public Mono<List<EmbeddingDTO>> embeddingsGenerate(List<String> chunks, String source){
 
