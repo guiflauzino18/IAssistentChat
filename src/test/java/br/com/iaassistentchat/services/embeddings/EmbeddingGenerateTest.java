@@ -11,8 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.embedding.Embedding;
 import org.springframework.ai.embedding.EmbeddingResponse;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
@@ -22,7 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class EmbeddingRepositoryGenerateTest {
+class EmbeddingGenerateTest {
 
     @Mock
     private OpenAiEmbeddingModel embeddingModel;
