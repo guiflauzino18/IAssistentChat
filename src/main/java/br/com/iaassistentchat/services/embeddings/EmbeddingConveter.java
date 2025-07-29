@@ -20,6 +20,7 @@ public class EmbeddingConveter {
         entity.setSource(dto.getSource());
         PGvector vector = new PGvector(dto.getVetor());
         entity.setVector(vector);
+        entity.setLastModified(dto.getLastModified());
         return entity;
     }
 

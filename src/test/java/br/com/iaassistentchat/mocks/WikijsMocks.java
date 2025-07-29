@@ -12,8 +12,8 @@ public class WikijsMocks {
                   "data": {
                     "pages": {
                       "list": [
-                        { "id": "1", "title": "Página A", "path": "/a" },
-                        { "id": "2", "title": "Página B", "path": "/b" }
+                        { "id": "1", "title": "Página A", "path": "/a", "updatedAt": "2025-05-13T20:13:22.786Z" },
+                        { "id": "2", "title": "Página B", "path": "/b", "updatedAt": "2025-05-13T20:13:22.786Z" }
                       ]
                     }
                   }

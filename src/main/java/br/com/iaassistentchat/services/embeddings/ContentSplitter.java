@@ -1,6 +1,7 @@
 package br.com.iaassistentchat.services.embeddings;
 
 import br.com.iaassistentchat.utils.ContentNormalizeMD;
+import br.com.iaassistentchat.utils.ContentNormalizeNoDiagram;
 import br.com.iaassistentchat.utils.ContentNormalizeSpace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,17 +16,21 @@ public class ContentSplitter {
     private ContentNormalizeSpace normalizeSpace;
     @Autowired
     private ContentNormalizeMD normalizeMD;
+    @Autowired
+    private ContentNormalizeNoDiagram normalizeNoDiagram;
 
     //Split the page's content in chunks of X characters
     public List<String> split(String text, int chunkSize, int overlap){
         List<String> chunks = new ArrayList<>();
         text = contentNormalize(text);
 
+
+        //chunks = List.of(text.split("(#3)"));
+
         for (int i = 0; i < text.length(); i += (chunkSize - overlap)){
             int end = Math.min(i + chunkSize, text.length());
             chunks.add(text.substring(i, end));
         }
-
         return  chunks;
     }
 
@@ -33,6 +38,7 @@ public class ContentSplitter {
 
         content = normalizeSpace.normalize(content);
         content = normalizeMD.normalize(content);
+        content = normalizeNoDiagram.normalize(content);
 
         return  content;
     }

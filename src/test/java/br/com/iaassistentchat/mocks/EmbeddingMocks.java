@@ -5,6 +5,7 @@ import br.com.iaassistentchat.DTO.EmbeddingDTO;
 import br.com.iaassistentchat.DTO.EmbeddingResultDTO;
 import org.springframework.ai.embedding.Embedding;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +40,7 @@ public class EmbeddingMocks {
         mock.setTexto("Text mock "+id);
         mock.setSource("Source mock "+id);
         mock.setVetor(vector);
+        mock.setLastModified(LocalDateTime.now());
 
         return mock;
 

@@ -33,6 +33,7 @@ public class EmbeddingPersitence {
         ).toList();
 
         //Persiste no banco
+        logger.info("Persistindo embeddings no Banco");
         entities.forEach(item -> repository.save(item));
     }
 }

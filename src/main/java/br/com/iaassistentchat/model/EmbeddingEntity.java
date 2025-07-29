@@ -2,6 +2,8 @@ package br.com.iaassistentchat.model;
 import com.pgvector.PGvector;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -18,4 +20,7 @@ public class EmbeddingEntity {
     private PGvector vector;
 
     private String source;
+
+    @Column(name = "last_modified")
+    private LocalDateTime lastModified;
 }

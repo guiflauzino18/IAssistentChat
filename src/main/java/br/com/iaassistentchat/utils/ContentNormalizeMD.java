@@ -25,6 +25,11 @@ public class ContentNormalizeMD  implements Normalize {
     }
 
     private String removeSpecialCharacter(String content){
-        return content.replaceAll("#+", " ").trim();
+        //content = content.replaceAll("#+", " ").trim();
+        content = content.replaceAll("-+", " ").trim();
+        content = content.replaceAll("\\|+", " ").trim();
+
+        return content;
+
     }
 }

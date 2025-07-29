@@ -6,14 +6,14 @@ import com.pgvector.PGvector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Repository
 public class EmbeddingRepository {
@@ -25,16 +25,17 @@ public class EmbeddingRepository {
 
     public void save(EmbeddingEntity embedding){
 
-        logger.info(String.format("Persistindos %s no Banco de Dados", embedding.getSource()));
+        logger.info(String.format("Persistindo %s no Banco de Dados", embedding.getSource()));
 
         Map<String, Object> params = new HashMap<>();
         params.put("id", UUID.randomUUID());
         params.put("text", embedding.getText());
         params.put("vector", embedding.getVector());
         params.put("source", embedding.getSource());
+        params.put("last_modified", embedding.getLastModified());
 
         String sql = """
-                    INSERT INTO embeddings (id, text, vector, source) VALUES (:id, :text, :vector, :source)
+                    INSERT INTO embeddings (id, text, vector, source, last_modified) VALUES (:id, :text, :vector, :source, :last_modified)
                 """;
 
         jdbc.update(sql, params);
@@ -58,5 +59,26 @@ public class EmbeddingRepository {
                 result.getString("text"),
                 result.getString("source")
         ));
+    }
+
+
+    public List<EmbeddingEntity> findBySource(String source){
+        String sql = """
+                        SELECT * FROM embeddings
+                        WHERE source = :source
+                    """;
+
+        var params = new MapSqlParameterSource().addValue("source", source);
+
+
+        return jdbc.query(sql, params, (result, rowNum ) -> new EmbeddingEntity(
+            UUID.fromString(result.getString("id")),
+            result.getString("text"),
+            new PGvector(result.getString("vector")),
+            result.getString("source"),
+            LocalDateTime.parse(result.getString("last_modified").replaceAll(" ", "T"))
+
+        ));
+
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class WikijsService {
                           id
                           title
                           path
+                          updatedAt
                         }
                       }
                     }
@@ -72,7 +74,8 @@ public class WikijsService {
                             pages.add(new PageListDTO(
                                     page.path("id").asInt(),
                                     page.path("title").asText(),
-                                    page.path("path").asText()
+                                    page.path("path").asText(),
+                                    LocalDateTime.parse(page.path("updatedAt").asText().split("\\.")[0])
                             ));
                         }
 
