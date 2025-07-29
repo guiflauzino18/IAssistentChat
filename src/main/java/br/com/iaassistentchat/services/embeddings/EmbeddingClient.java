@@ -31,9 +31,12 @@ public class EmbeddingClient {
     }
 
     public JsonNode request(List<String> chunks){
+
+
+
         Map<String, Object> body = Map.of(
                 "model", embeddingModel,
-                "input", chunks.toString()
+                "input", chunks
         );
 
         try {
@@ -46,23 +49,10 @@ public class EmbeddingClient {
             assert response.getBody() != null;
             return response.getBody().get("data");
 
-            /*
-            * data : [
-            * {
-            *   "object": "embedding",
-            *   "embedding": [
-                        -0.039228495,
-                        0.016075142,
-                        -0.097792916,
-                        -0.05472523,
-            *       ],
-            *       "index": 0
-            *   }
-            * ]
-            * */
         } catch (Exception e) {
             throw new RuntimeException("Erro ao obter Embeddings da Together.AI: "+e.getMessage());
         }
+
     }
 
 

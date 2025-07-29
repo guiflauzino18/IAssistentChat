@@ -10,4 +10,7 @@ CREATE TABLE IF NOT EXISTS embeddings (
     last_modified TIMESTAMP
 );
 
---CREATE INDEX idx_embeddings_vetor ON embeddings USING ivfflat (vetor vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX idx_embeddings_vector ON embeddings USING ivfflat (vector vector_cosine_ops);
+
+--Executar abaixo após popular o Banco.
+--REINDEX INDEX idx_embeddings_vector;

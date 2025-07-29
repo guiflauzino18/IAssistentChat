@@ -41,7 +41,7 @@ public class RagService {
                     // Busca por similaridade no banco (operação síncrona → deve ser envolvida em Mono)
                     return Mono.fromCallable(() -> {
                         List<EmbeddingResultDTO> similarResults = embeddingSearch.findBySimilarity(
-                                new PGvector(embedding.getVetor()), 5
+                                new PGvector(embedding.getVetor()), 2
                         );
 
                         String contexto = similarResults.stream()

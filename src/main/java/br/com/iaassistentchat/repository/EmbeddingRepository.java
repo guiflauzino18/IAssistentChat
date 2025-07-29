@@ -46,7 +46,7 @@ public class EmbeddingRepository {
         logger.info("Realizando busca veterial por Similaridade");
         String sql = """
                         SELECT id, text, source FROM embeddings
-                        ORDER BY vector <-> :vector
+                        ORDER BY vector <=> :vector
                         LIMIT :topK
                      """;
 
@@ -60,7 +60,6 @@ public class EmbeddingRepository {
                 result.getString("source")
         ));
     }
-
 
     public List<EmbeddingEntity> findBySource(String source){
         String sql = """

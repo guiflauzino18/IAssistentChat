@@ -36,7 +36,6 @@ public class EmbeddingGenerate {
                                         throw new IllegalArgumentException("Lote não pode ser vazio");
                                     }
 
-                                    //EmbeddingResponse response = embeddingModel.embedForResponse(lote);
                                     var response = embeddingClient.request(lote);
                                     List<EmbeddingDTO> listDTO = new ArrayList<>();
 
@@ -70,8 +69,6 @@ public class EmbeddingGenerate {
             List<String> page = chunks.subList(i, Math.min(i + pageLenght, chunks.size()));
             pages.add(page);
         }
-
-        System.out.println("-----------------_"+pages.size());
 
         return pages;
     }

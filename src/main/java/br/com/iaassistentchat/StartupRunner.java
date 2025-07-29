@@ -48,7 +48,7 @@ public class StartupRunner implements ApplicationRunner {
 
 
                                 logger.info("Quebrando conteúdo da página em chunks");
-                                var chunks = splitter.split(content.getContent(), 1000, 100);
+                                var chunks = splitter.split(content.getContent(), content.getTitle(), 1000, 100);
 
 
                                 logger.info("Gerando embeddings");

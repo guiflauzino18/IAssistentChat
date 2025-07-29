@@ -27,7 +27,7 @@ class ContentSplitterTest {
 
         String texto = "A".repeat(100);
         Mockito.when(normalizeSpace.normalize(Mockito.anyString())).thenReturn(texto);
-        List<String> chunks = splitter.split(texto, 40, 10);
+        List<String> chunks = splitter.split(texto, "test",40, 10);
 
         assertEquals(3, chunks.size());
         assertEquals(40, chunks.get(0).length());
