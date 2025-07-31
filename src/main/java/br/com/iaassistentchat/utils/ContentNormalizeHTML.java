@@ -4,14 +4,12 @@ import br.com.iaassistentchat.interfaces.Normalize;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContentNormalizeSpace implements Normalize{
+public class ContentNormalizeHTML implements Normalize {
 
     @Override
     public String normalize(String content) {
-
-        content = content.replaceAll("\\s+", " ").trim();
-        content = content.replaceAll("\\n", " ").trim();
-
+        content = content.replaceAll("(?s)<.+?>", " ").trim();
         return content;
+
     }
 }

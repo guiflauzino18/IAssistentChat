@@ -33,7 +33,6 @@ public class EmbeddingClient {
     public JsonNode request(List<String> chunks){
 
 
-
         Map<String, Object> body = Map.of(
                 "model", embeddingModel,
                 "input", chunks

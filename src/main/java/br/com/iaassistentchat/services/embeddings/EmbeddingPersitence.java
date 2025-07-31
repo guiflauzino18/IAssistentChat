@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.*;
 
@@ -21,8 +22,7 @@ public class EmbeddingPersitence {
 
     private Logger logger = LoggerFactory.getLogger(EmbeddingPersitence.class);
 
-    public void save(List<EmbeddingDTO> embeddings){
-
+    public List<EmbeddingEntity> save(List<EmbeddingDTO> embeddings){
 
         //Converter dto para Entity
         List<EmbeddingEntity> entities = embeddings.stream()
@@ -34,6 +34,13 @@ public class EmbeddingPersitence {
 
         //Persiste no banco
         logger.info("Persistindo embeddings no Banco");
-        entities.forEach(item -> repository.save(item));
+
+        for (EmbeddingEntity embeddingEntity : entities) {
+            repository.save(embeddingEntity);
+
+        }
+
+        return  entities;
+
     }
 }

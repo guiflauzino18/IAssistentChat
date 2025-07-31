@@ -28,6 +28,7 @@ public class ContentNormalizeMD  implements Normalize {
         //content = content.replaceAll("#+", " ").trim();
         content = content.replaceAll("-+", " ").trim();
         content = content.replaceAll("\\|+", " ").trim();
+        content = content.replaceAll("(?s)\\{.*?}", " ").trim();
 
         return content;
 

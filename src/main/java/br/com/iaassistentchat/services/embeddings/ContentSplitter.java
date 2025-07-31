@@ -1,5 +1,6 @@
 package br.com.iaassistentchat.services.embeddings;
 
+import br.com.iaassistentchat.utils.ContentNormalizeHTML;
 import br.com.iaassistentchat.utils.ContentNormalizeMD;
 import br.com.iaassistentchat.utils.ContentNormalizeNoDiagram;
 import br.com.iaassistentchat.utils.ContentNormalizeSpace;
@@ -19,17 +20,18 @@ public class ContentSplitter {
     private ContentNormalizeMD normalizeMD;
     @Autowired
     private ContentNormalizeNoDiagram normalizeNoDiagram;
+    @Autowired
+    private ContentNormalizeHTML normalizeHTML;
 
     //Split the page's content in chunks of X characters
     public List<String> split(String text, String source, int chunkSize, int overlap){
-        List<String> chunksRaw = new ArrayList<>();
+
+//      Limpa o texto retirando caracteres especiais, tags html e tag markdown
         text = contentNormalize(text);
-
-
-        //chunksRaw = List.of(text.split("(#1)"));
 
         List<String> chunks = new ArrayList<>();
 
+        //Quebra texto em pedaços menores
         for (int i = 0; i < text.length(); i += (chunkSize - overlap)){
             int end = Math.min(i + chunkSize, text.length());
             chunks.add(text.substring(i, end));
@@ -37,11 +39,6 @@ public class ContentSplitter {
 
         chunks = removeBlankChunks(chunks);
         chunks = addSourceInChunks(chunks, source);
-
-
-        for (String chunk : chunks) {
-            System.out.println("Chunk: "+chunk);
-        }
 
 
         return  chunks;
@@ -66,6 +63,7 @@ public class ContentSplitter {
         content = normalizeSpace.normalize(content);
         content = normalizeMD.normalize(content);
         content = normalizeNoDiagram.normalize(content);
+        content = normalizeHTML.normalize(content);
 
         return  content;
     }

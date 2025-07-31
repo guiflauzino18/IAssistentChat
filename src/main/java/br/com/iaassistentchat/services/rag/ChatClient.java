@@ -3,18 +3,16 @@ package br.com.iaassistentchat.services.rag;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import reactor.core.publisher.Mono;
 
+import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -40,14 +38,20 @@ public class ChatClient {
         this.chatPath = chatPath;
         this.url = url;
         this.togetherApiKey = togetherApiKey;
+
+        HttpClient httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(120))
+                .build();
+
+
         this.restClient = RestClient.builder()
+                .requestFactory(new JdkClientHttpRequestFactory(httpClient))
                 .baseUrl(url+"/"+chatPath)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
 
     public JsonNode chat(String prompt){
-
 
         logger.info("Realizando completion");
 
@@ -62,6 +66,7 @@ public class ChatClient {
         );
 
         try {
+
             ResponseEntity<JsonNode> response = restClient.post()
                     .header("Authorization", "Bearer "+togetherApiKey)
                     .body(body)
