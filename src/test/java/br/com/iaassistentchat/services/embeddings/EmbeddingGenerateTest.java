@@ -11,9 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.embedding.Embedding;
 import org.springframework.ai.embedding.EmbeddingResponse;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class EmbeddingRepositoryGenerateTest {
+class EmbeddingGenerateTest {
 
     @Mock
     private OpenAiEmbeddingModel embeddingModel;
@@ -51,7 +50,7 @@ class EmbeddingRepositoryGenerateTest {
         EmbeddingResponse embeddingResponse = new EmbeddingResponse(List.of(emb1, emb2, emb3));
         when(embeddingModel.embedForResponse(anyList())).thenReturn(embeddingResponse);
 
-         List<EmbeddingDTO> result = embeddingGenerate.embeddingsGenerate(chunks, dto.getSource()).block();
+         List<EmbeddingDTO> result = embeddingGenerate.embeddingsGenerate(chunks, dto.getSource(), LocalDateTime.now()).block();
 
          assertNotNull(result);
          assertEquals(3, result.size());

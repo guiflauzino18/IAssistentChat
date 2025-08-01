@@ -26,14 +26,16 @@ spring:
 
   ai:
     openai:
-      base-url: ${LOCALAI_ADDRES}
-      api-key: ${OPENAI_KEY}
+      base-url: ${TOGETHER_API_URL}
+      api-key: ${TOGETHER_API_KEY}
       chat:
-        model: ${CHAT_MODEL} #gpt-3.5-turbo
-      embedding:
-        embeddings-path: ${EMBEDDINGS_PATH} #/embeddings
         options:
-          model: ${EMBEDDINGS_MODEL} #text-embedding-ada-002
+          model: ${TOGETHER_API_CHAT_MODEL}
+        completions-path: ${CHAT_COMPLETIONS_URL_PATH}
+      embedding:
+        embedding-path: ${TOGETHER_API_EMBEDDING_PATH}
+        options:
+          model: ${TOGETHER_API_EMBEDDING_MODEL} #text-embedding-ada-002
 
     vectorstore:
       pgvector:

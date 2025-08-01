@@ -16,10 +16,12 @@ public class EmbeddingConveter {
 
         logger.info("Converterndo DTO para Entity");
         var entity = new EmbeddingEntity();
+        entity.setPageId(dto.getPageId());
         entity.setText(dto.getTexto());
         entity.setSource(dto.getSource());
         PGvector vector = new PGvector(dto.getVetor());
         entity.setVector(vector);
+        entity.setLastModified(dto.getLastModified());
         return entity;
     }
 

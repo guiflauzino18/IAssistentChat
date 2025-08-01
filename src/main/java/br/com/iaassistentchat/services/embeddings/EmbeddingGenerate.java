@@ -1,5 +1,7 @@
 package br.com.iaassistentchat.services.embeddings;
 import br.com.iaassistentchat.DTO.EmbeddingDTO;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.pgvector.PGvector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.embedding.EmbeddingResponse;
@@ -10,6 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,44 +21,39 @@ public class EmbeddingGenerate {
 
     @Autowired
     private OpenAiEmbeddingModel embeddingModel;
+    @Autowired
+    private EmbeddingClient embeddingClient;
 
     Logger logger = LoggerFactory.getLogger(EmbeddingGenerate.class);
-
-    public Mono<List<EmbeddingDTO>> embeddingsGenerate(List<String> chunks, String source){
+    public Mono<List<EmbeddingDTO>> embeddingsGenerate(List<String> chunks, String source, LocalDateTime lastModified, int pageId){
 
         logger.info("Gerando Embeddings...");
-
-        return Flux.fromIterable(paginar(chunks, 2))
-                .concatMap(lote ->
-                                Mono.fromSupplier(() -> {
-                                    EmbeddingResponse response = embeddingModel.embedForResponse(lote);
-                                    List<EmbeddingDTO> listDTO = new ArrayList<>();
-
-                                    for (int i = 0; i < lote.size(); i ++){
-                                        var texto = chunks.get(i);
-                                        var vetor = response.getResults().get(i).getOutput();
-
-                                        listDTO.add(new EmbeddingDTO(texto, vetor, source));
-                                    }
-                                    return listDTO;
-                                }).subscribeOn(Schedulers.boundedElastic())
-
-                        )
-                .flatMap(Flux::fromIterable)
-                .collectList(); //Junta todos os Embeddings em uma única lista final
-
+        return embeddingRequest(chunks) //Faz request à API que gera os embeddings
+                .map(item -> collectEmbeddings(item, chunks, source, lastModified, pageId)) //Resultado da request á coletado e gerado um EmbeddingDTO
+                .subscribeOn(Schedulers.boundedElastic()); //Para lidar com operações bloqueantes dentro de um fluxo reativo
     }
 
-    //Para não enviar conteúdos das página de uma vez para gerar os embedding, será criado paginas
-    // para enviar o conteúdos aos pocuos
-    private List<List<String>> paginar(List<String> chunks, int pageLenght){
-        List<List<String>> pages = new ArrayList<>();
+    private Mono<JsonNode> embeddingRequest(List<String> chunks){
+         return Mono.fromCallable(() -> embeddingClient.request(chunks));
+    }
 
-        for (int i = 0; i < chunks.size(); i += pageLenght){
-            List<String> page = chunks.subList(i, Math.min(i + pageLenght, chunks.size()));
-            pages.add(page);
+    private List<EmbeddingDTO> collectEmbeddings(JsonNode json, List<String> chunks, String source, LocalDateTime lastModified, int pageId){
+
+        List<EmbeddingDTO> listDTO = new ArrayList<>();
+
+
+        for (int i = 0; i < json.size(); i++){
+            float[] vetor = new float[json.get(i).get("embedding").size()];
+
+            for (int j = 0; j < json.get(i).get("embedding").size(); j++){
+                vetor[j] = json.get(i).get("embedding").get(j).floatValue();
+            }
+
+            listDTO.add(new EmbeddingDTO(pageId,chunks.get(i), vetor, source, lastModified ));
         }
 
-        return pages;
+        return listDTO;
+
     }
+
 }

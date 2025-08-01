@@ -8,6 +8,10 @@ public class ContentNormalizeSpace implements Normalize{
 
     @Override
     public String normalize(String content) {
-        return content.replaceAll("\\s+", " ").trim();
+
+        content = content.replaceAll("\\s+", " ").trim();
+        //content = content.replaceAll("\\n", " ").trim();
+
+        return content;
     }
 }
