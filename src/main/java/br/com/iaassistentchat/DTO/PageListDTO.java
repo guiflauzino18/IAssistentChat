@@ -15,5 +15,4 @@ public class PageListDTO {
     private String path;
     private LocalDateTime lastModified;
 
-
 }

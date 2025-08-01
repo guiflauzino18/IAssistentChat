@@ -14,6 +14,9 @@ public class EmbeddingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(name = "page_id")
+    private int pageId;
     
     private String text;
 

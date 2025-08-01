@@ -42,7 +42,7 @@ public class RagService {
 
 
     private Mono<EmbeddingDTO> generateEmbeddingsOfAsk(String pergunta){
-        return embeddingGenerate.embeddingsGenerate(List.of(pergunta), "pergunta", LocalDateTime.now())
+        return embeddingGenerate.embeddingsGenerate(List.of(pergunta), "pergunta", LocalDateTime.now(), 0)
                 .map(item -> {
                     System.out.println("##########################"+item.size());
                     return item.getFirst();

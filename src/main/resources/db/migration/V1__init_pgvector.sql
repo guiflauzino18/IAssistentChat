@@ -4,6 +4,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 -- Cria tabela de embeddings
 CREATE TABLE IF NOT EXISTS embeddings (
     id UUID PRIMARY KEY,
+    page_id INTEGER,
     text TEXT,
     vector VECTOR(768),
     source VARCHAR,

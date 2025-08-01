@@ -42,7 +42,7 @@ class EmbeddingPersitenceTest {
     }
 
     @Test
-    void save() {
+    void save() throws Exception {
         List<EmbeddingDTO> listDTO = List.of(dto, dto);
         when(conveter.toEntity(any(EmbeddingDTO.class))).thenReturn(entity);
 

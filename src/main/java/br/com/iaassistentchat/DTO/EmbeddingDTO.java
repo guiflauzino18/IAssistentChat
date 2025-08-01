@@ -13,6 +13,7 @@ import java.util.List;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class EmbeddingDTO {
 
+    private int pageId;
     private String texto;
     private float[] vetor;
     private String source;

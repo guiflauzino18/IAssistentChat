@@ -69,7 +69,7 @@ public class StartupRunner implements ApplicationRunner {
                         getContentFromPage(pageListDTO.getId()) //Pega conteudo da página
                         .map(this::splitPageContentInChunks) //Gera chunks
                         .flatMap(chunks -> //Gera embeddings
-                            generateEmbeddingsFromChunks(chunks, pageListDTO.getTitle(), pageListDTO.getLastModified())
+                            generateEmbeddingsFromChunks(chunks, pageListDTO.getTitle(), pageListDTO.getLastModified(), pageListDTO.getId())
                         ).flatMap(this::saveEmbedding) //Salva os embeddings no banco
                 ).sequential()//Retorn para o fluxo
                 .subscribe(
@@ -77,8 +77,6 @@ public class StartupRunner implements ApplicationRunner {
                         error -> logger.error("Erro ", error),
                         () -> logger.info("Finalizado")
                 );
-
-
     }
 
     private Mono<List<PageListDTO>> searchPagesInWikijs(){
@@ -96,15 +94,13 @@ public class StartupRunner implements ApplicationRunner {
         return splitter.split(content.getContent(), content.getTitle(), 1000, 100);
     }
 
-    private Mono<List<EmbeddingDTO>> generateEmbeddingsFromChunks(List<String> chunks, String title, LocalDateTime lastModified){
+    private Mono<List<EmbeddingDTO>> generateEmbeddingsFromChunks(List<String> chunks, String title, LocalDateTime lastModified, int pageId){
         logger.info("Gerando embeddings da página %s".formatted(title));
-        return embeddingGenerate.embeddingsGenerate(chunks, title, lastModified);
+        return embeddingGenerate.embeddingsGenerate(chunks, title, lastModified, pageId);
     }
 
     private Mono<List<EmbeddingEntity>> saveEmbedding(List<EmbeddingDTO> embeddings){
         logger.info("Salvando embeddings no banco");
-        return Mono.fromCallable(() -> {
-            return persitenceService.save(embeddings);
-        });
+        return Mono.fromCallable(() -> persitenceService.save(embeddings));
     }
 }

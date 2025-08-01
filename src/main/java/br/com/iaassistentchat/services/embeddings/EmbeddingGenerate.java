@@ -25,11 +25,11 @@ public class EmbeddingGenerate {
     private EmbeddingClient embeddingClient;
 
     Logger logger = LoggerFactory.getLogger(EmbeddingGenerate.class);
-    public Mono<List<EmbeddingDTO>> embeddingsGenerate(List<String> chunks, String source, LocalDateTime lastModified){
+    public Mono<List<EmbeddingDTO>> embeddingsGenerate(List<String> chunks, String source, LocalDateTime lastModified, int pageId){
 
         logger.info("Gerando Embeddings...");
         return embeddingRequest(chunks) //Faz request à API que gera os embeddings
-                .map(item -> collectEmbeddings(item, chunks, source, lastModified)) //Resultado da request á coletado e gerado um EmbeddingDTO
+                .map(item -> collectEmbeddings(item, chunks, source, lastModified, pageId)) //Resultado da request á coletado e gerado um EmbeddingDTO
                 .subscribeOn(Schedulers.boundedElastic()); //Para lidar com operações bloqueantes dentro de um fluxo reativo
     }
 
@@ -37,7 +37,7 @@ public class EmbeddingGenerate {
          return Mono.fromCallable(() -> embeddingClient.request(chunks));
     }
 
-    private List<EmbeddingDTO> collectEmbeddings(JsonNode json, List<String> chunks, String source, LocalDateTime lastModified){
+    private List<EmbeddingDTO> collectEmbeddings(JsonNode json, List<String> chunks, String source, LocalDateTime lastModified, int pageId){
 
         List<EmbeddingDTO> listDTO = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class EmbeddingGenerate {
                 vetor[j] = json.get(i).get("embedding").get(j).floatValue();
             }
 
-            listDTO.add(new EmbeddingDTO(chunks.get(i), vetor, source, lastModified ));
+            listDTO.add(new EmbeddingDTO(pageId,chunks.get(i), vetor, source, lastModified ));
         }
 
         return listDTO;
