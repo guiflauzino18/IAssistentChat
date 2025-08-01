@@ -49,17 +49,12 @@ public class StartupRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("Iniciando...");
 
+        startEmbedding();
 
-//        getContentFromPage(15)
-//                .map(item -> splitter.split(item.getContent(), item.getTitle(), 1000, 100))
-//                .subscribe(item -> {
-//                    for (String s : item) {
-//                        System.out.println("\n\n"+s);
-//                    }
-//                });
+    }
 
+    public void startEmbedding(){
         searchPagesInWikijs()
                 .flatMapMany(Flux::fromIterable)                            //Percorre a lista retornada
                 .filter(pageListDTO -> pageVersion.updated(pageListDTO))   //Filtra a condição para continuar o fluxo
@@ -67,10 +62,10 @@ public class StartupRunner implements ApplicationRunner {
                 .runOn(Schedulers.boundedElastic())
                 .flatMap(pageListDTO -> // Inicia o processamento de um item da lista
                         getContentFromPage(pageListDTO.getId()) //Pega conteudo da página
-                        .map(this::splitPageContentInChunks) //Gera chunks
-                        .flatMap(chunks -> //Gera embeddings
-                            generateEmbeddingsFromChunks(chunks, pageListDTO.getTitle(), pageListDTO.getLastModified(), pageListDTO.getId())
-                        ).flatMap(this::saveEmbedding) //Salva os embeddings no banco
+                                .map(this::splitPageContentInChunks) //Gera chunks
+                                .flatMap(chunks -> //Gera embeddings
+                                        generateEmbeddingsFromChunks(chunks, pageListDTO.getTitle(), pageListDTO.getLastModified(), pageListDTO.getId())
+                                ).flatMap(this::saveEmbedding) //Salva os embeddings no banco
                 ).sequential()//Retorn para o fluxo
                 .subscribe(
                         saved -> logger.info("Saved {}", saved),
@@ -91,7 +86,7 @@ public class StartupRunner implements ApplicationRunner {
 
     private List<String> splitPageContentInChunks(PageContentDTO content){
         logger.info("QUebrando conteúdo da página %s em Chunks".formatted(content.getTitle()));
-        return splitter.split(content.getContent(), content.getTitle(), 1000, 100);
+        return splitter.split(content.getContent(), content.getTitle(), 1000, 10);
     }
 
     private Mono<List<EmbeddingDTO>> generateEmbeddingsFromChunks(List<String> chunks, String title, LocalDateTime lastModified, int pageId){

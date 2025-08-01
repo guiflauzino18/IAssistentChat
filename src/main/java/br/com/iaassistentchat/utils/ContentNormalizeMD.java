@@ -21,7 +21,9 @@ public class ContentNormalizeMD  implements Normalize {
     }
 
     private String removeTabs(String content){
-        return content.replaceAll("\\t+", " ").trim();
+        content = content.replaceAll("\\t+", " ").trim();
+        content = content.replaceAll("Tabs", " ").trim();
+        return content;
     }
 
     private String removeSpecialCharacter(String content){

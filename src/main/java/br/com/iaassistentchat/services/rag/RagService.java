@@ -2,20 +2,14 @@ package br.com.iaassistentchat.services.rag;
 
 import br.com.iaassistentchat.DTO.EmbeddingDTO;
 import br.com.iaassistentchat.DTO.EmbeddingResultDTO;
-import br.com.iaassistentchat.services.embeddings.EmbeddingClient;
 import br.com.iaassistentchat.services.embeddings.EmbeddingGenerate;
 import br.com.iaassistentchat.services.embeddings.EmbeddingSearch;
 import com.pgvector.PGvector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +44,7 @@ public class RagService {
     }
 
     private Mono<List<EmbeddingResultDTO>>  doSearchOfSimilarity(EmbeddingDTO embedding){
-        return Mono.fromCallable(() -> embeddingSearch.findBySimilarity(new PGvector(embedding.getVetor()), 5));
+        return Mono.fromCallable(() -> embeddingSearch.findBySimilarity(new PGvector(embedding.getVetor()), 7));
 
     }
 
@@ -70,7 +64,8 @@ public class RagService {
                 Você é uma IA treinada para responder à perguntas de usuários sobre processos da empresa.
                 Abaixo está a pergunta do usuário e um texto de referencia para voce responder.
                 A resposta deve estar relacionada exclusivamente ao contexto abaixo, caso não esteja retorne a resposta dizendo que não foi possível encontrar a resposta.
-                
+                No final de cada contexto passado terá uma informação de referencia sobre à qual empresa as informações se referem. Use isto na hora de gerar as respostas, caso a informação de referencia não bata com a empresa passada pelo usuário na pergunta desconsidere essa informação.
+                É essencial que não passe informações incorretas misturando os dados das empresas.
                 
                 Contexto:
                 %s

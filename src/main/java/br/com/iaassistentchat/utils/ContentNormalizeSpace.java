@@ -10,7 +10,7 @@ public class ContentNormalizeSpace implements Normalize{
     public String normalize(String content) {
 
         content = content.replaceAll("\\s+", " ").trim();
-        content = content.replaceAll("\\n", " ").trim();
+        //content = content.replaceAll("\\n", " ").trim();
 
         return content;
     }

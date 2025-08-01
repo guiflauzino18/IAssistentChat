@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,8 @@ public class ContentSplitter {
 
 //      Limpa o texto retirando caracteres especiais, tags html e tag markdown
         text = contentNormalize(text);
-
         List<String> chunks = new ArrayList<>();
+
 
         //Quebra texto em pedaços menores
         for (int i = 0; i < text.length(); i += (chunkSize - overlap)){
@@ -44,9 +45,19 @@ public class ContentSplitter {
         return  chunks;
     }
 
+    private String contentNormalize(String content){
+
+        content = normalizeSpace.normalize(content);
+        content = normalizeMD.normalize(content);
+        content = normalizeNoDiagram.normalize(content);
+        content = normalizeHTML.normalize(content);
+
+        return  content;
+    }
+    
     private List<String> addSourceInChunks(List<String> chunks, String source){
         return chunks.stream()
-                .map(chunk -> chunk + "- Empresa: "+source ).collect(Collectors.toList());
+                .map(chunk -> chunk + "- Referências: Empresa "+source ).collect(Collectors.toList());
 
     }
 
@@ -58,13 +69,5 @@ public class ContentSplitter {
         return mutableList;
     }
 
-    private String contentNormalize(String content){
 
-        content = normalizeSpace.normalize(content);
-        content = normalizeMD.normalize(content);
-        content = normalizeNoDiagram.normalize(content);
-        content = normalizeHTML.normalize(content);
-
-        return  content;
-    }
 }
